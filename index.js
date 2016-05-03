@@ -32,6 +32,33 @@ co.wrap = function (fn) {
 };
 
 /**
+ * Wrap all the generator functions found
+ * in the own properties of the given `obj`.
+ * This is especially useful for a class
+ * `prototype`, in order to define async
+ * methods.
+ *
+ * @param {Object} obj
+ * @return {Object}
+ * @api public
+ */
+
+co.wrapAll = function (obj) {
+  var keys = Object.getOwnPropertyNames(obj);
+
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    var value = obj[key];
+
+    if (value && isGeneratorFunction(value)) {
+      obj[key] = co.wrap(value);
+    }
+  }
+
+  return obj;
+}
+
+/**
  * Execute the generator function or a generator
  * and return a promise.
  *

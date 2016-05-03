@@ -196,6 +196,38 @@ fn(true).then(function (val) {
 });
 ```
 
+### co.wrapAll({ fn* })
+
+Apply the above wrapping to all generator functions found in the own properties
+of an object.
+
+```js
+var obj = {
+  fn: function* (val) {
+    return yield Promise.resolve(val);
+  }
+};
+
+co.wrapAll(obj);
+
+obj.fn(true).then(function (val) {
+
+});
+```
+
+This is especially useful for a class `prototype`, in order to define
+asynchronous methods.
+
+```js
+class Foo {
+  *bar(val) {
+    return yield Promise.resolve(val);
+  }
+}
+
+co.wrapAll(Foo.prototype);
+```
+
 ## License
 
   MIT
